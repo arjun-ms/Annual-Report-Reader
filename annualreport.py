@@ -28,7 +28,8 @@ if pdf is not None:
     
     print("Reading pdf")
     
-    temp_path = f"temp/temp_{pdf.name}"
+    #temp_path = f"temp/temp_{pdf.name}"
+    temp_path = f"{pdf.name}"
     if not os.path.exists(f"temp/temp_{pdf.name}"):
         with open(temp_path, "wb") as f:
             f.write(pdf.read())
