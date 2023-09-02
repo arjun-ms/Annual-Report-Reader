@@ -1,0 +1,5 @@
+venv
+temp
+.env
+chroma
+chroma_migrated
