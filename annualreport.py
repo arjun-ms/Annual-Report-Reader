@@ -12,8 +12,9 @@ from langchain.chains.question_answering import load_qa_chain
 from langchain.callbacks import get_openai_callback
 import os
 import time 
+from constants import CHROMA_SETTINGS
+from ingest import loadAndSplitDoc
 
- 
 load_dotenv()
  
 
@@ -24,34 +25,28 @@ pdf = st.file_uploader("Upload the Annual Report", type='pdf')
 # pdf_sub = st.button("Submit AR")
 
 if pdf is not None:
+    
     print("Reading pdf")
     
-    temp_path = f"temp_{pdf.name}"
-    with open(temp_path, "wb") as f:
-        f.write(pdf.read())
+    temp_path = f"temp/temp_{pdf.name}"
+    if not os.path.exists(f"temp/temp_{pdf.name}"):
+        with open(temp_path, "wb") as f:
+            f.write(pdf.read())
 
-    pdf_loader = PyPDFLoader(temp_path)
-    documents = pdf_loader.load()
-
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-    documents = text_splitter.split_documents(documents)
-
-    print("text read and splitted")
+    documents = loadAndSplitDoc(temp_path)
 
     
-    persist_directory = 'db'
+    persist_directory = 'chroma'
     embedding = OpenAIEmbeddings()
-    print("//////////////////////////////")
-    if os.path.exists('db'):
-        print("inside if")
+    
+    if os.path.exists('chroma'):
         # Now we can load the persisted database from disk, and use it as normal. 
-        vectordb = Chroma(persist_directory=persist_directory, embedding_function=embedding)
+        vectordb = Chroma(persist_directory=persist_directory, embedding_function=embedding,client_settings=CHROMA_SETTINGS)
         print(f"{vectordb} Loaded ...")
     else:
-        print("inside else")  
         # Embed and store the texts
         # Supplying a persist_directory will store the embeddings on disk
-        vectordb = Chroma.from_documents(documents=documents, embedding=embedding, persist_directory=persist_directory)
+        vectordb = Chroma.from_documents(documents=documents, embedding=embedding, persist_directory=persist_directory,client_settings=CHROMA_SETTINGS)
         vectordb.persist()
         # vectordb = None
         print(f"{vectordb} persisted ...")
@@ -60,8 +55,8 @@ if pdf is not None:
 
     # Accept user questions/query
     query = st.text_input("Ask questions about your PDF file:")  
-    submit_bt = st.button("Ask!")
-    if query and submit_bt:
+    # submit_bt = st.button("Ask!")
+    if query is not None:
         print(query)
         docs = vectordb.similarity_search(query=query, k=3)
 

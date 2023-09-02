@@ -1,4 +1,5 @@
 venv
-temp_Zomato_Annual_Report_2022-23.pdf
+temp
 .env
-db
+chroma
+chroma_migrated
