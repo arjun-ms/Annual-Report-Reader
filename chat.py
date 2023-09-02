@@ -14,66 +14,39 @@ import time
 
  
 load_dotenv()
- 
+
 def main():
     st.header("Annual Report Reader")
- 
-    # upload a PDF file
+
     pdf = st.file_uploader("Upload the Annual Report", type='pdf')
 
     if pdf is not None:
-        pdf_reader = PdfReader(pdf)
-        
-        text = ""
-        for page in pdf_reader.pages:
-            text += page.extract_text()
+        temp_path = f"temp_{pdf.name}"
+        with open(temp_path, "wb") as f:
+            f.write(pdf.read())
 
-        # print(text)
+        pdf_loader = PyPDFLoader(temp_path)
+        documents = pdf_loader.load()
 
-        text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=1000,
-            chunk_overlap=200,
-            length_function=len
-            )
-        chunks = text_splitter.split_text(text=text)
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+        documents = text_splitter.split_documents(documents)
 
-        # print(chunks)
-        print(type(chunks))
-        # st.write(chunks)
-        
-        # embeddings
-        store_name = pdf.name[:-4]
-        # st.write(f'{store_name}')
-
-        if os.path.exists(f"{store_name}.pkl"):
-            with open(f"{store_name}.pkl", "rb") as f:
-                VectorStore = pickle.load(f)
-            # st.write('Embeddings Loaded from the Disk')s
-        else:
-            embeddings = OpenAIEmbeddings()
-            VectorStore = FAISS.from_texts(chunks, embedding=embeddings)
-            with open(f"{store_name}.pkl", "wb") as f:
-                pickle.dump(VectorStore, f)
-
-        
-        print("Start asking questions")
-    
+        # Create the embeddings
+        embeddings = OpenAIEmbeddings()
+        vector_store = Chroma.from_documents(documents, embedding=embeddings, persist_directory='./data')
 
         # Accept user questions/query
-        query = st.text_input("Ask questions about your PDF file:")  
+        query = st.text_input("Ask questions about your PDF file:")
 
         if query:
-            print(query)
-            docs = VectorStore.similarity_search(query=query, k=3)
-
+            docs = vector_store.similarity_search(query=query, k=3)
             llm = OpenAI()
             chain = load_qa_chain(llm=llm, chain_type="stuff")
             with get_openai_callback() as cb:
                 response = chain.run(input_documents=docs, question=query)
-                print(cb)
             st.write(response)
         else:
             print("No query")
-    
+
 if __name__ == '__main__':
     main()
