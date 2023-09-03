@@ -1,7 +1,7 @@
 ![Chroma Frame](https://github.com/TH-Activities/saturday-hack-night-template/assets/90635335/365c00da-597c-446f-9aa7-bed99fb26074)
 
-# Query on Annual Report
-Our project aims to create an interactive and user-friendly web application that allows users to extract insights and information from Annual Reports of a comapny PDF documents. 
+# Annual Report Reader
+Our project aims to create an interactive and user-friendly web application that allows users to extract insights and information from Annual Reports of a company PDF documents. 
 We integrate Langchain, OpenAI, and ChromaDB to deliver accurate and relevant responses.
 
 ## Team members
@@ -27,7 +27,15 @@ Users simply input their queries, and the system matches these inquiries with th
    
 ## How to configure
 1. Clone this repository
+```
+$git clone https://github.com/arjun-ms/Annual-Report-Reader.git
+```
 2. Install the libraries given in requirements.txt
+```
+$pip install -r requirements.txt
+```
    
 ## How to Run
-Run command $streamlit run annualreport.py
+```
+$streamlit run annualreport.py
+```
