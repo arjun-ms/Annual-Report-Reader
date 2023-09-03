@@ -63,3 +63,4 @@ if st.button("Submit AR and Ask"):
             response = chain.run(input_documents=docs, question=st.session_state.query)
             st.write(response)
             print(cb)
+
