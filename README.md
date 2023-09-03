@@ -10,7 +10,7 @@ We integrate Langchain, OpenAI, and ChromaDB to deliver accurate and relevant re
 3. [Namitha S](https://github.com/Namitha-S-11465)
 
 ## Link to product walkthrough
-   [link to video](Link Here)
+   [link to video](https://youtu.be/8ZkNIeTjeLI)
 
 ## How it Works ?
 This web application harnesses the power of Langchain, OpenAI, and ChromaDB to facilitate efficient PDF document interaction. 
