@@ -6,9 +6,9 @@ We integrate Langchain, OpenAI, and ChromaDB to deliver accurate and relevant re
 
 ## Team members
 1. [Arjun M S](https://github.com/arjun-ms)
-2. [Muhammed Ajmal]
+2. [Muhammed Ajmal](https://github.com/ajmalmohad)
 3. [Namitha S](https://github.com/Namitha-S-11465)
-   
+
 ## Link to product walkthrough
 [link to video](Link Here)
 
